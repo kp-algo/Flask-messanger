@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   
+
+    <input type = 'text' id="user-msg" name = 'user-msg' placeholder = "Type your msg here...">
+    <button onclick = "sendMsg()"> Send </button>
+    
+
+    <div id = "msg-display">
+
+    </div>
+    <br>
+    <button onclick = "leave()"> Leave </button>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
+<script>
+
+    const socket = io.connect(); // by default connects to the flask port
+
+    socket.on("connect", () => {
+        socket.emit("join_room", {
+            username: "{{username}}",
+            room: "{{room}}"
+        });
+       console.log("Successfully joined the room");
+    });
+    
+    socket.on("join_announcement", (data) => {
+        let para = document.getElementById("msg-display");
+        if(data.username !== "{{username}}"){
+        let newNode = document.createElement('div');
+        newNode.innerHTML = `<b>${data.username} has joined room ${data.room}</b>`
+        para.appendChild(newNode);
+        }
+    });
+    
+    function sendMsg(){
+        const msg = document.getElementById("user-msg");
+        socket.emit('send_msg', {
+            username: "{{username}}",
+            room: "{{room}}",
+            message: msg.value
+        }
+    )};
+    
+    function leave(){
+        socket.emit('leave', {
+            username: "{{username}}",
+            room: "{{room}}"
+        });
+        window.location.href = "/";
+    };
+
+    socket.on("receive_msg", (data) => {
+        let parNode = document.getElementById("msg-display");
+        let newNode = document.createElement("div");
+        newNode.innerHTML = `<b>${data.username}:</b> ${data.message}`;
+        parNode.appendChild(newNode);
+    });
+    
+    socket.on('leave_annoucement', (data) => {
+        let parNode = document.getElementById("msg-display");
+        let newNode = document.createElement("div");
+        newNode.innerHTML = `<b>${data.username} left the room.</b>`;
+        parNode.appendChild(newNode);
+      
+    });
+
+    socket.on('messages', (data) => {
+        let parNode = document.getElementById("msg-display");
+        data.forEach((data) => {
+            let newNode = document.createElement("div");
+            newNode.innerHTML = `<b>${data.username}:</b> ${data.content}`;
+            parNode.append(newNode)
+        })
+    }) 
+
+</script>
+
+</html>
+

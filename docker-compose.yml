@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # The Redis Switchboard
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  # Server 1
+  web-6969:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "6969:6969"
+    environment:
+      - PORT=6969
+    depends_on:
+      - redis
+
+  # Server 2
+  web-6970:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "6970:6970"
+    environment:
+      - PORT=6970
+    depends_on:
+      - redis
