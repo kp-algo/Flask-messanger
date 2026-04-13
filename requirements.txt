@@ -2,5 +2,6 @@ flask
 flask_socketio
 flask_sqlalchemy
 flask_login
-flask_bcrypt
+Flask_Bcrypt
 redis
+psycopg2-binary

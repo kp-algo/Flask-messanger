@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  #postgres server
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: my_database
+    ports:
+      - "5432:5432"
+
   # The Redis Switchboard
   redis:
     image: redis:alpine
@@ -18,6 +28,7 @@ services:
       - PORT=6969
     depends_on:
       - redis
+      - db
 
   # Server 2
   web-6970:
@@ -30,3 +41,4 @@ services:
       - PORT=6970
     depends_on:
       - redis
+      - db

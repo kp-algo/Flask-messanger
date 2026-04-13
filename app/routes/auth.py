@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, redirect
 from flask_login import login_user
 from flask_bcrypt import Bcrypt
 from app.models import Customer
-from app import db
+from app import db, bcrypt
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -16,7 +16,7 @@ def login():
         if not check:
             return redirect("/signup")
         else:
-            if check.password == password:
+            if bcrypt.check_password_hash(check.password, password):
                 login_user(check) 
                 return redirect("/room")
             else:
@@ -30,11 +30,11 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         check = Customer.query.filter_by(username=username).first()
-        
+        pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         if check:
             return "Name should be unique"
         else:
-            customer = Customer(username=username, password=password)
+            customer = Customer(username=username, password=pw_hash)
             db.session.add(customer)
             db.session.commit()
             return redirect('/login')
