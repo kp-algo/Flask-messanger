@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  type: LoadBalancer # Or NodePort/ClusterIP depending on your provider
+  sessionAffinity: ClientIP
+  selector:
+    app: web
+  ports:
+    - name: port-6969
+      protocol: TCP
+      port: 6969
+      targetPort: 6969
+    

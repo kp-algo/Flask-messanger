@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "run.py"]
+CMD ["gunicorn", "-k", "eventlet", "-w", "1", "-b", "0.0.0.0:6969", "run:app"]

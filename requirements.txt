@@ -1,7 +1,9 @@
 flask
-flask_socketio
+flask-socketio
 flask_sqlalchemy
 flask_login
 Flask_Bcrypt
 redis
 psycopg2-binary
+eventlet
+gunicorn==21.2.0

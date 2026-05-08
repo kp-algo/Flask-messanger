@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-servers
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: flask_messanger:latest # K8s needs a pre-built image
+        imagePullPolicy: IfNotPresent
+        command: ["gunicorn"]
+        args: [
+          "-k", "eventlet",        # Async worker for WebSockets
+          "-w", "1",               # 1 worker per pod to prevent WebSocket conflicts
+          "-b", "0.0.0.0:6969",    # Listen on all network interfaces
+          "--access-logfile", "-", # Send logs to kubectl
+          "--error-logfile", "-", 
+          "run:app"                # Point to the app object
+        ]
+        env:
+        - name: PORT
+          value: "6969" 
+        - name: DATABASE_URL
+          value: "postgresql://user:password@db:5432/my_database"
+      
+        # Note: In K8s, pods communicate with 'db' and 'redis' 
+        # using the Service names defined above.
