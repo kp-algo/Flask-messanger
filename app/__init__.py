@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from config import Config
-import redis
 
 # 1. Initialize extensions (Unattached)
 db = SQLAlchemy()
@@ -12,8 +11,6 @@ socketio = SocketIO(message_queue="redis://redis:6379", cors_allowed_origins='*'
 #socketio = SocketIO(cors_allowed_origins='*')
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-#client to keep the track the history of message in a room
-redis_msg_client = redis.Redis(host = "redis", port = 6379, db = 0)
 
 def create_app():
     # 2. Create the Flask app

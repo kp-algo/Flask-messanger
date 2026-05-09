@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
+  namespace: default
+  labels:
+    app: db
 spec:
   replicas: 1
   selector:
@@ -13,20 +16,19 @@ spec:
         app: db
     spec:
       containers:
-      - name: postgres
-        image: postgres:15
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: messenger-secrets
-              key: user
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: messenger-secrets
-              key: password
-        - name: POSTGRES_DB
-          value: "my_database"
-
-        
+        - name: postgres
+          image: postgres:15
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: messenger-secrets
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: messenger-secrets
+                  key: password
+            - name: POSTGRES_DB
+              value: my_database

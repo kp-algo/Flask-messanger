@@ -4,7 +4,7 @@ metadata:
   name: web-service
 spec:
   type: LoadBalancer # Or NodePort/ClusterIP depending on your provider
-  sessionAffinity: ClientIP
+  # sessionAffinity: ClientIP
   selector:
     app: web
   ports:

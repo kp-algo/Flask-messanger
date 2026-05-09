@@ -23,8 +23,9 @@
 
     // const socket = io.connect(); // by default connects to the flask port
     const socket = io({
-        transports: ['websocket']
+    transports: ['websocket']
     });
+    
     socket.on("connect", () => {
         socket.emit("join_room", {
             username: "{{username}}",
