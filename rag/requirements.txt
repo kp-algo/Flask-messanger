@@ -1,0 +1,8 @@
+flask
+gunicorn
+sentence-transformers
+faiss-cpu
+numpy
+nltk
+google-genai
+python-dotenv

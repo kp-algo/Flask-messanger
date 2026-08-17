@@ -15,7 +15,7 @@ spec:
       containers:
       - name: web
         image: flask_messanger:latest # K8s needs a pre-built image
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         command: ["gunicorn"]
         args: [
           "-k", "eventlet",        # Async worker for WebSockets
